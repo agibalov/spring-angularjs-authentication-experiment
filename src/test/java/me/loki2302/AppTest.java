@@ -8,15 +8,11 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
 
 import static me.loki2302.App.*;
 import static org.junit.Assert.*;
@@ -46,7 +42,6 @@ public class AppTest {
             fail("Managed to retrieve user details without authentication");
         } catch(HttpClientErrorException e) {
             assertEquals(HttpStatus.FORBIDDEN, e.getStatusCode());
-            System.out.printf("%s\n", e.getResponseBodyAsString());
         }
     }
 
@@ -93,4 +88,6 @@ public class AppTest {
         assertNotNull(me);
         assertEquals("user", me.username);
     }
+
+    // TODO: test for /api/deauthenticate
 }

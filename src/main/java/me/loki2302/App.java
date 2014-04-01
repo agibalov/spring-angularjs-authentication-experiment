@@ -16,13 +16,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 public class App {
     public static void main(String[] args) {
@@ -32,14 +30,8 @@ public class App {
     @Configuration
     @ComponentScan
     @EnableAutoConfiguration
-    public static class AppConfiguration {
-
-    }
-
-    @Configuration
-    @EnableWebMvcSecurity
     @EnableGlobalMethodSecurity(prePostEnabled = true)
-    public static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    public static class AppConfiguration extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
             auth.inMemoryAuthentication()
@@ -65,14 +57,6 @@ public class App {
                     "/css/**",
                     "/fonts/**",
                     "/js/**");
-        }
-    }
-
-    @Configuration
-    public static class MvcConfiguration extends WebMvcConfigurerAdapter {
-        @Override
-        public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
         }
     }
 
