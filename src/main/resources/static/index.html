@@ -62,7 +62,7 @@
                 return {
                     "request": function(config) {
                         console.log("REQUEST!", config);
-                            return config || $q.when(config);
+                        return config || $q.when(config);
                     },
                     "requestError": function(rejection) {
                         console.log("REQUEST ERROR!", rejection);
