@@ -35,31 +35,7 @@
         <script type="text/javascript">
             var app = angular.module("app", ["ngRoute"]);
             app.config(["$httpProvider", "$routeProvider", function($httpProvider, $routeProvider) {
-                $httpProvider.interceptors.push(function($q, $location) {
-                    return {
-                        "request": function(config) {
-                            console.log("REQUEST!", config);
-                            return config || $q.when(config);
-                        },
-                        "requestError": function(rejection) {
-                            console.log("REQUEST ERROR!", rejection);
-                            return $q.reject(rejection);
-                        },
-                        "response": function(response) {
-                            console.log("RESPONSE!", response);
-                            return response || $q.when(response);
-                        },
-                        "responseError": function(rejection) {
-                            console.log("RESPONSE ERROR!", rejection);
-
-                            if(rejection.status === 403) {
-                                $location.path("/signIn");
-                            }
-
-                            return $q.reject(rejection);
-                        }
-                    };
-                });
+                $httpProvider.interceptors.push("errorHandlingHttpInterceptor");
 
                 $routeProvider
                 .when("/", {
@@ -80,6 +56,32 @@
                 .otherwise({
                     redirectTo: "/"
                 });
+            }]);
+
+            angular.module("app").factory("errorHandlingHttpInterceptor", ["$q", "$location", function($q, $location) {
+                return {
+                    "request": function(config) {
+                        console.log("REQUEST!", config);
+                            return config || $q.when(config);
+                    },
+                    "requestError": function(rejection) {
+                        console.log("REQUEST ERROR!", rejection);
+                        return $q.reject(rejection);
+                    },
+                    "response": function(response) {
+                        console.log("RESPONSE!", response);
+                        return response || $q.when(response);
+                    },
+                    "responseError": function(rejection) {
+                        console.log("RESPONSE ERROR!", rejection);
+
+                        if(rejection.status === 403) {
+                            $location.path("/signIn");
+                        }
+
+                        return $q.reject(rejection);
+                    }
+                };
             }]);
 
             angular.module("app").controller("MeController", ["$scope", "me", function($scope, me) {
